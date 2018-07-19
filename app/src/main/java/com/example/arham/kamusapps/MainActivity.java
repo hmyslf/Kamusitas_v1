@@ -2,6 +2,10 @@ package com.example.arham.kamusapps;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     Button btn1, btnistilah, btnbahasa;
     String urls, bhs, defspinner;
     ImageView copyright, appslogo;
+    ArrayList<String> istilah, lables;
 
     private String url_getbahasa = "http://api.prime-strategy.co.id/kamusitas/v1/kamus";
 
@@ -54,6 +59,10 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         btnistilah = findViewById(R.id.btnistilah);
         btnbahasa = findViewById(R.id.btn_bhs);
         copyright = findViewById(R.id.copyright);
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Chivo.ttf");
+        btnistilah.setTypeface(custom_font, Typeface.BOLD);
+        btnbahasa.setTypeface(custom_font, Typeface.BOLD);
+        btn1.setTypeface(custom_font, Typeface.BOLD);
         copyright.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,6 +85,13 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                 startActivity(mainsite);
             }
         });
+
+
+        istilah = new ArrayList<>();
+
+        lables = new ArrayList<>();
+
+
         btn1.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 //                urls = s2.getSelectedItem().toString();
@@ -87,15 +103,38 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         });
 
         listBahasa = new ArrayList<Bahasa>();
+        final Drawable roundDrawable = getResources().getDrawable(R.drawable.selection_border);
+        roundDrawable.setColorFilter(getResources().getColor(R.color.lightblue), PorterDuff.Mode.SRC_ATOP);
+        final Drawable roundDrawable2 = getResources().getDrawable(R.drawable.selection_border);
+        roundDrawable2.setColorFilter(getResources().getColor(R.color.darkblue), PorterDuff.Mode.SRC_ATOP);
 
         btnistilah.setSelected(true);
+        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            btnbahasa.setBackgroundDrawable(roundDrawable);
+            btnistilah.setTextColor(getResources().getColor(R.color.white));
+         } else {
+            btnbahasa.setBackground(roundDrawable);
+            btnistilah.setTextColor(getResources().getColor(R.color.white));
+         }
+
+         new GetIstilahFromServer().execute();
+
         btnistilah.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 listBahasa.clear();
                 new GetIstilahFromServer().execute();
-                btnistilah.setBackgroundColor(getResources().getColor(R.color.lightgrey));
-                btnbahasa.setBackgroundColor(getResources().getColor(R.color.greyer));
+                if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                    btnbahasa.setBackgroundDrawable(roundDrawable);
+                    btnistilah.setBackgroundDrawable(roundDrawable2);
+                    btnistilah.setTextColor(getResources().getColor(R.color.white));
+                    btnbahasa.setTextColor(getResources().getColor(R.color.black));
+                } else {
+                    btnbahasa.setBackground(roundDrawable);
+                    btnistilah.setBackground(roundDrawable2);
+                    btnistilah.setTextColor(getResources().getColor(R.color.white));
+                    btnbahasa.setTextColor(getResources().getColor(R.color.black));
+                }
                 return false;
             }
         });
@@ -104,8 +143,17 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 listBahasa.clear();
                 new GetBahasaFromServer().execute();
-                btnistilah.setBackgroundColor(getResources().getColor(R.color.greyer));
-                btnbahasa.setBackgroundColor(getResources().getColor(R.color.lightgrey));
+                if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                    btnistilah.setBackgroundDrawable(roundDrawable);
+                    btnbahasa.setBackgroundDrawable(roundDrawable2);
+                    btnbahasa.setTextColor(getResources().getColor(R.color.white));
+                    btnistilah.setTextColor(getResources().getColor(R.color.black));
+                } else {
+                    btnistilah.setBackground(roundDrawable);
+                    btnbahasa.setBackground(roundDrawable2);
+                    btnbahasa.setTextColor(getResources().getColor(R.color.white));
+                    btnistilah.setTextColor(getResources().getColor(R.color.black));
+                }
                 return false;
             }
         });
@@ -203,12 +251,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
     }
     private void populateSpinnerModel(){
-        ArrayList<String> lables = new ArrayList<String>();
-//        ArrayList<String> urls = new ArrayList<String>();
 
         for(int i = 0; i < listBahasa.size(); i++){
             lables.add(listBahasa.get(i).getFullName());
-//            urls.add(listURL.get(i).getUrl());
         }
         adapter2 = new ArrayAdapter<String>(this, R.layout.spinner_item, lables);
         s2.setAdapter(adapter2);
@@ -282,15 +327,17 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
     }
     private void populateSpinner2Model(){
-//        ArrayList<String> lables = new ArrayList<String>();
-        ArrayList<String> istilah = new ArrayList<>();
-
         for(int i = 0; i < listBahasa.size(); i++){
             istilah.add(listBahasa.get(i).getTarget());
 //            urls.add(listURL.get(i).getUrl());
         }
         adapter3 = new ArrayAdapter<>(this, R.layout.spinner_item, istilah);
         s2.setAdapter(adapter3);
+        defspinner = "KBBI";
+        if(defspinner != null){
+            int spinnerPosition = adapter3.getPosition(defspinner);
+            s2.setSelection(spinnerPosition);
+        }
         s2.setOnItemSelectedListener(this);
     }
 }
