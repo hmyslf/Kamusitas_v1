@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Kamusitas</string>
+    <string name="title_activity_kamus">Kamusitas</string>
+    <string name="definition">Translation  :</string>
+    <string-array name="pilihKamus">
+        <item>Kamus Istilah</item>
+        <item>Kamus Bahasa</item>
+    </string-array>
+    <string name="copyright">Powered By  :\u0020</string>
+</resources>
