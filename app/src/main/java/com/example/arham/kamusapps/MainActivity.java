@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                 listBahasa.clear();
                 new GetIstilahFromServer().execute();
                 btnistilah.setBackgroundColor(getResources().getColor(R.color.lightgrey));
+                btnbahasa.setBackgroundColor(getResources().getColor(R.color.greyer));
                 return false;
             }
         });
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 listBahasa.clear();
                 new GetBahasaFromServer().execute();
+                btnistilah.setBackgroundColor(getResources().getColor(R.color.greyer));
                 btnbahasa.setBackgroundColor(getResources().getColor(R.color.lightgrey));
                 return false;
             }
@@ -281,13 +283,13 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     }
     private void populateSpinner2Model(){
 //        ArrayList<String> lables = new ArrayList<String>();
-        ArrayList<String> istilah = new ArrayList<String>();
+        ArrayList<String> istilah = new ArrayList<>();
 
         for(int i = 0; i < listBahasa.size(); i++){
             istilah.add(listBahasa.get(i).getTarget());
 //            urls.add(listURL.get(i).getUrl());
         }
-        adapter3 = new ArrayAdapter<String>(this, R.layout.spinner_item, istilah);
+        adapter3 = new ArrayAdapter<>(this, R.layout.spinner_item, istilah);
         s2.setAdapter(adapter3);
         s2.setOnItemSelectedListener(this);
     }

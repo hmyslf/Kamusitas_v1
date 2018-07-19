@@ -6,5 +6,10 @@
         <item>Kamus Istilah</item>
         <item>Kamus Bahasa</item>
     </string-array>
-    <string name="copyright">Powered By  :\u0020</string>
+    <string name="copyright">Powered By</string>
+    <string name="kamus_istilah">Kamus Istilah</string>
+    <string name="kamus_bahasa">Kamus Bahasa</string>
+    <string name="pilih_bahasa">Pilih Bahasa \t:</string>
+    <string name="pilih_kamus">Pilih Kamus \t:</string>
+    <string name="select">Select</string>
 </resources>

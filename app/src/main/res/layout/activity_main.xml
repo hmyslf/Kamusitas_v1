@@ -24,6 +24,7 @@
         >
 
         <ImageView
+            android:contentDescription="@string/app_name"
             android:id="@+id/appslogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,8 +50,12 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="36dp"
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
             android:layout_marginLeft="36dp"
-            android:text="Kamus Istilah" />
+            android:text="@string/kamus_istilah"
+            android:textColor="@color/black"
+            android:background="@drawable/selection_border"/>
 
         <Button
             android:id="@+id/btn_bhs"
@@ -61,7 +66,11 @@
             android:layout_alignParentTop="true"
             android:layout_marginEnd="36dp"
             android:layout_marginRight="36dp"
-            android:text="Kamus Bahasa" />
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
+            android:text="@string/kamus_bahasa"
+            android:textColor="@color/black"
+            android:background="@drawable/selection_border"/>
     </RelativeLayout>
 
     <!--<TextView-->
@@ -96,7 +105,7 @@
         android:layout_alignStart="@+id/spinner2"
         android:layout_alignLeft="@+id/spinner2"
         android:layout_marginTop="292dp"
-        android:text="Pilih Bahasa   :"
+        android:text="@string/pilih_bahasa"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -120,7 +129,7 @@
         android:layout_marginBottom="211dp"
         android:layout_below="@+id/spinner2"
         android:background="@drawable/button_border"
-        android:text="Select" />
+        android:text="@string/select" />
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
@@ -129,6 +138,7 @@
         android:gravity="center_horizontal"
         android:background="@color/darkblue">
         <ImageView
+            android:contentDescription="@string/copyright"
             android:layout_width="120dp"
             android:layout_height="23dp"
             android:id="@+id/copyright"

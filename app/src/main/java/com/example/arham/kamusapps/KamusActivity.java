@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -48,6 +49,7 @@ public class KamusActivity extends AppCompatActivity {
         ab.setDisplayShowTitleEnabled(true);
         String bhstarget = bundle.getString("bahasa");
         ab.setTitle(bhstarget);
+
 
         listview = findViewById(R.id.listView);
         searchview = findViewById(R.id.searchview);
@@ -169,5 +171,16 @@ public class KamusActivity extends AppCompatActivity {
 
         listview.setAdapter(adapter4);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        if(id == android.R.id.home){
+            onBackPressed();
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
