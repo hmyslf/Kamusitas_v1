@@ -48,7 +48,8 @@ public class KamusActivity extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowTitleEnabled(true);
         String bhstarget = bundle.getString("bahasa");
-        ab.setTitle(bhstarget);
+        String divider = bundle.getString("divider");
+        ab.setTitle(divider + "\n" + bhstarget);
 
 
         listview = findViewById(R.id.listView);

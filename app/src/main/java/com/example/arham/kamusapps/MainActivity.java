@@ -32,11 +32,11 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener{
 
     private Spinner s1, s2;
-
+    ProgressDialog pdialog;
     private ArrayList<Bahasa> listBahasa;
     ArrayAdapter adapter1, adapter2, adapter3;
     Button btn1, btnistilah, btnbahasa;
-    String urls, bhs, defspinner;
+    String urls, bhs, defspinner, divider, titlebhs;
     ImageView copyright, appslogo;
     ArrayList<String> istilah, lables;
 
@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        s1 = findViewById(R.id.spinner1);
         s2 = findViewById(R.id.spinner2);
         btn1 = findViewById(R.id.btn1);
         btnistilah = findViewById(R.id.btnistilah);
@@ -63,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         btnistilah.setTypeface(custom_font, Typeface.BOLD);
         btnbahasa.setTypeface(custom_font, Typeface.BOLD);
         btn1.setTypeface(custom_font, Typeface.BOLD);
+        pdialog = new ProgressDialog(this);
         copyright.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,13 +91,12 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
         lables = new ArrayList<>();
 
-
         btn1.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-//                urls = s2.getSelectedItem().toString();
                 Intent intent =new Intent(MainActivity.this, KamusActivity.class);
                 intent.putExtra("URL", urls);
-                intent.putExtra("bahasa", bhs);
+                intent.putExtra("bahasa", titlebhs);
+                intent.putExtra("divider", divider);
                 startActivity(intent);
             }
         });
@@ -115,9 +114,10 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
          } else {
             btnbahasa.setBackground(roundDrawable);
             btnistilah.setTextColor(getResources().getColor(R.color.white));
+            divider = btnistilah.getText().toString();
          }
 
-         new GetIstilahFromServer().execute();
+        new GetIstilahFromServer().execute();
 
         btnistilah.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                     btnistilah.setBackground(roundDrawable2);
                     btnistilah.setTextColor(getResources().getColor(R.color.white));
                     btnbahasa.setTextColor(getResources().getColor(R.color.black));
+                    divider = btnistilah.getText().toString();
                 }
                 return false;
             }
@@ -153,16 +154,12 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                     btnbahasa.setBackground(roundDrawable2);
                     btnbahasa.setTextColor(getResources().getColor(R.color.white));
                     btnistilah.setTextColor(getResources().getColor(R.color.black));
+                    divider = btnbahasa.getText().toString();
                 }
                 return false;
             }
         });
 
-
-
-//        adapter1 = ArrayAdapter.createFromResource(this, R.array.pilihKamus, R.layout.spinner_item);
-//        s1.setAdapter(adapter1);
-//        s1.setOnItemSelectedListener(this);
 
     }
 
@@ -170,10 +167,18 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
         Spinner spinner = (Spinner) adapterView;
         if(spinner.getId() == R.id.spinner2){
-            urls = listBahasa.get(position).getUrl();
-            bhs = listBahasa.get(position).getFullName();
+            if(listBahasa != null && listBahasa.size() != 0) {
+                urls = listBahasa.get(position).getUrl();
+                bhs = listBahasa.get(position).getTarget().toLowerCase();
+            }
+            if(bhs.length() > 4){
+                titlebhs = bhs.substring(0, 1).toUpperCase() + bhs.substring(1);
+            } else {
+                titlebhs = bhs.toUpperCase();
+            }
         }
     }
+
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
@@ -186,6 +191,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         @Override
         protected void onPreExecute(){
             super.onPreExecute();
+            pdialog.setMessage("読み込み中...");
+            pdialog.show();
         }
 
         @Override
@@ -246,6 +253,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
         protected void onPostExecute(Void result){
             super.onPostExecute(result);
+            if(pdialog.isShowing()){
+                pdialog.dismiss();
+            }
             populateSpinnerModel();
         }
 
@@ -265,6 +275,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         @Override
         protected void onPreExecute(){
             super.onPreExecute();
+            pdialog.setMessage("読み込み中...");
+            pdialog.show();
         }
 
         @Override
@@ -322,6 +334,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
         protected void onPostExecute(Void result){
             super.onPostExecute(result);
+            if(pdialog.isShowing()){
+                pdialog.dismiss();
+            }
             populateSpinner2Model();
         }
 
@@ -333,13 +348,14 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         }
         adapter3 = new ArrayAdapter<>(this, R.layout.spinner_item, istilah);
         s2.setAdapter(adapter3);
+        s2.setOnItemSelectedListener(this);
         defspinner = "KBBI";
         if(defspinner != null){
             int spinnerPosition = adapter3.getPosition(defspinner);
             s2.setSelection(spinnerPosition);
         }
-        s2.setOnItemSelectedListener(this);
     }
+
 }
 
 
