@@ -2,6 +2,7 @@ package com.example.arham.kamusapps;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
@@ -19,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 
 import org.json.JSONArray;
@@ -27,18 +29,22 @@ import org.json.JSONObject;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener{
 
-    private Spinner s1, s2;
+    private Spinner s2;
     ProgressDialog pdialog;
     private ArrayList<Bahasa> listBahasa;
-    ArrayAdapter adapter1, adapter2, adapter3;
-    Button btn1, btnistilah, btnbahasa;
-    String urls, bhs, defspinner, divider, titlebhs;
+    ArrayAdapter adapter2, adapter3;
+    Button btn1, btnistilah, btnbahasa, btndefault;
+    String urls, bhs, defspinner, divider, titlebhs, bahasa, bahasatgt, lcbahasa;
     ImageView copyright, appslogo;
     ArrayList<String> istilah, lables;
+    SharedPreferences sharedPref;
+    int usersChoice;
 
     private String url_getbahasa = "http://api.prime-strategy.co.id/kamusitas/v1/kamus";
 
@@ -57,11 +63,13 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         btn1 = findViewById(R.id.btn1);
         btnistilah = findViewById(R.id.btnistilah);
         btnbahasa = findViewById(R.id.btn_bhs);
+        btndefault = findViewById(R.id.btn2);
         copyright = findViewById(R.id.copyright);
         Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Chivo.ttf");
         btnistilah.setTypeface(custom_font, Typeface.BOLD);
         btnbahasa.setTypeface(custom_font, Typeface.BOLD);
         btn1.setTypeface(custom_font, Typeface.BOLD);
+        btndefault.setTypeface(custom_font,Typeface.BOLD);
         pdialog = new ProgressDialog(this);
         copyright.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,9 +94,6 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             }
         });
 
-
-        istilah = new ArrayList<>();
-
         lables = new ArrayList<>();
 
         btn1.setOnClickListener(new View.OnClickListener(){
@@ -97,7 +102,22 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                 intent.putExtra("URL", urls);
                 intent.putExtra("bahasa", titlebhs);
                 intent.putExtra("divider", divider);
+                intent.putExtra("bhs", bahasa);
+                intent.putExtra("bhstgt", bahasatgt);
                 startActivity(intent);
+            }
+        });
+        btndefault.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                usersChoice = s2.getSelectedItemPosition();
+                sharedPref = getSharedPreferences("FileName",0);
+                SharedPreferences.Editor prefEditor = sharedPref.edit();
+                prefEditor.putInt("s2", usersChoice);
+                prefEditor.commit();
+                if(sharedPref.contains("s2")){
+                        Toast.makeText(MainActivity.this, "Pilihan dijadikan default", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -107,56 +127,44 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         final Drawable roundDrawable2 = getResources().getDrawable(R.drawable.selection_border);
         roundDrawable2.setColorFilter(getResources().getColor(R.color.darkblue), PorterDuff.Mode.SRC_ATOP);
 
-        btnistilah.setSelected(true);
         if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            btnbahasa.setBackgroundDrawable(roundDrawable);
-            btnistilah.setTextColor(getResources().getColor(R.color.white));
+            btnistilah.setBackgroundDrawable(roundDrawable);
+            btnbahasa.setTextColor(getResources().getColor(R.color.white));
          } else {
-            btnbahasa.setBackground(roundDrawable);
-            btnistilah.setTextColor(getResources().getColor(R.color.white));
-            divider = btnistilah.getText().toString();
+            btnistilah.setBackground(roundDrawable);
+            btnbahasa.setTextColor(getResources().getColor(R.color.white));
+            divider = btnbahasa.getText().toString();
          }
 
-        new GetIstilahFromServer().execute();
+         listBahasa.clear();
+        new GetBahasaFromServer().execute();
 
-        btnistilah.setOnTouchListener(new View.OnTouchListener() {
+        btnistilah.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public void onClick(View view) {
                 listBahasa.clear();
                 new GetIstilahFromServer().execute();
-                if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                    btnbahasa.setBackgroundDrawable(roundDrawable);
-                    btnistilah.setBackgroundDrawable(roundDrawable2);
-                    btnistilah.setTextColor(getResources().getColor(R.color.white));
-                    btnbahasa.setTextColor(getResources().getColor(R.color.black));
-                } else {
+
                     btnbahasa.setBackground(roundDrawable);
                     btnistilah.setBackground(roundDrawable2);
                     btnistilah.setTextColor(getResources().getColor(R.color.white));
                     btnbahasa.setTextColor(getResources().getColor(R.color.black));
                     divider = btnistilah.getText().toString();
-                }
-                return false;
+
             }
         });
-        btnbahasa.setOnTouchListener(new View.OnTouchListener() {
+        btnbahasa.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public void onClick(View v) {
                 listBahasa.clear();
                 new GetBahasaFromServer().execute();
-                if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                    btnistilah.setBackgroundDrawable(roundDrawable);
-                    btnbahasa.setBackgroundDrawable(roundDrawable2);
-                    btnbahasa.setTextColor(getResources().getColor(R.color.white));
-                    btnistilah.setTextColor(getResources().getColor(R.color.black));
-                } else {
+
                     btnistilah.setBackground(roundDrawable);
                     btnbahasa.setBackground(roundDrawable2);
                     btnbahasa.setTextColor(getResources().getColor(R.color.white));
                     btnistilah.setTextColor(getResources().getColor(R.color.black));
                     divider = btnbahasa.getText().toString();
-                }
-                return false;
+
             }
         });
 
@@ -170,11 +178,19 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             if(listBahasa != null && listBahasa.size() != 0) {
                 urls = listBahasa.get(position).getUrl();
                 bhs = listBahasa.get(position).getTarget().toLowerCase();
+                bahasa = listBahasa.get(position).getSource();
+                bahasatgt = listBahasa.get(position).getTarget().toLowerCase();
+                if(bahasatgt.equals("kbbi")){
+                    bahasatgt = bahasatgt.toUpperCase();
+                } else {
+                    bahasatgt = bahasatgt.substring(0, 1).toUpperCase() + bahasatgt.substring(1);
+                }
+
             }
-            if(bhs.length() > 4){
-                titlebhs = bhs.substring(0, 1).toUpperCase() + bhs.substring(1);
-            } else {
+            if(bhs.equals("kbbi")){
                 titlebhs = bhs.toUpperCase();
+            } else {
+                titlebhs = bhs.substring(0, 1).toUpperCase() + bhs.substring(1);
             }
         }
     }
@@ -191,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         @Override
         protected void onPreExecute(){
             super.onPreExecute();
-            pdialog.setMessage("読み込み中...");
+            pdialog.setMessage("Loading Data...");
             pdialog.show();
         }
 
@@ -212,13 +228,23 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                         for (int i = 0; i< source.length(); i++){
                             JSONObject bObj = (JSONObject) source.get(i);
 
-                            Bahasa bahasa = new Bahasa(bObj.getString("from").toUpperCase(), bObj.getString("to").toUpperCase(), bObj.getString("uri"));
-                            if (bObj.getString("from").equals("indo")){
-                                bahasa.setSource("INDONESIA");
-                            } else if (bObj.getString("to").equals("indo")){
-                                bahasa.setTarget("INDONESIA");
+                            if(bObj.getString("to").length() > 3){
+                                lcbahasa = bObj.getString("to").substring(0, 1).toUpperCase() + bObj.getString("to").substring(1);
+                            } else {
+                                lcbahasa = bObj.getString("to").toUpperCase();
                             }
+
+
+                            Bahasa bahasa = new Bahasa(bObj.getString("from").toUpperCase(), lcbahasa, bObj.getString("uri"));
+                            if (bObj.getString("from").equals("indo")){
+                                bahasa.setSource("Indonesia");
+                            } else if (bObj.getString("to").equals("indo")){
+                                bahasa.setTarget("Indonesia");
+                            }
+
+
                             listBahasa.add(bahasa);
+
                             if (bObj.getString("from").equals("indo") && bObj.getString("to").equals("adsense") || bObj.getString("to").equals("komputer")
                                     || bObj.getString("to").equals("kbbi")|| bObj.getString("to").equals("akuntansi")
                                     || bObj.getString("to").equals("bahasa-gaul-singkatan-inggris")
@@ -236,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                                     || bObj.getString("to").equals("perbankan")
                                     || bObj.getString("to").equals("padanan-komputer")
                                     || bObj.getString("to").equals("persahabatan")){
-                                bahasa.setSource("INDONESIA");
+                                bahasa.setSource("Indonesia");
                                 listBahasa.remove(bahasa);
                             }
                         }
@@ -261,13 +287,26 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
     }
     private void populateSpinnerModel(){
-
+        lables = new ArrayList<>();
         for(int i = 0; i < listBahasa.size(); i++){
-            lables.add(listBahasa.get(i).getFullName());
+            lables.add(listBahasa.get(i).getTarget());
         }
-        adapter2 = new ArrayAdapter<String>(this, R.layout.spinner_item, lables);
+        adapter2 = new ArrayAdapter<>(this, R.layout.spinner_item, lables);
         s2.setAdapter(adapter2);
         s2.setOnItemSelectedListener(this);
+        defspinner = "Selayar";
+        SharedPreferences sharedPref = getSharedPreferences("FileName",MODE_PRIVATE);
+        int spinnerValue = sharedPref.getInt("s2", -1);
+        if(sharedPref.contains("s2")){
+            if(spinnerValue != -1) {
+                // set the selected value of the spinner
+                s2.setSelection(spinnerValue);
+            }
+        } else {
+            int spinnerPosition = adapter2.getPosition(defspinner);
+            s2.setSelection(spinnerPosition);
+        }
+
     }
 
     private class GetIstilahFromServer extends AsyncTask<Void, Void, Void> {
@@ -275,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         @Override
         protected void onPreExecute(){
             super.onPreExecute();
-            pdialog.setMessage("読み込み中...");
+            pdialog.setMessage("Loading Data...");
             pdialog.show();
         }
 
@@ -296,7 +335,14 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                         for (int i = 0; i< source.length(); i++){
                             JSONObject bObj = (JSONObject) source.get(i);
 
-                            Bahasa bahasa = new Bahasa(bObj.getString("from").toUpperCase(), bObj.getString("to").toUpperCase(), bObj.getString("uri"));
+                            if(bObj.getString("to").length() > 4){
+                                lcbahasa = bObj.getString("to").substring(0, 1).toUpperCase() + bObj.getString("to").substring(1);
+                            } else {
+                                lcbahasa = bObj.getString("to").toUpperCase();
+                            }
+
+
+                            Bahasa bahasa = new Bahasa(bObj.getString("from").toUpperCase(), lcbahasa, bObj.getString("uri"));
                             if (bObj.getString("from").equals("indo") && bObj.getString("to").equals("adsense") || bObj.getString("to").equals("komputer")
                                     || bObj.getString("to").equals("kbbi")|| bObj.getString("to").equals("akuntansi")
                                     || bObj.getString("to").equals("bahasa-gaul-singkatan-inggris")
@@ -314,10 +360,10 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                                     || bObj.getString("to").equals("perbankan")
                                     || bObj.getString("to").equals("padanan-komputer")
                                     || bObj.getString("to").equals("persahabatan")){
-                                bahasa.setSource("INDONESIA");
+                                bahasa.setSource("Indonesia");
                                 listBahasa.add(bahasa);
                             } else if (bObj.getString("to").equals("indo")){
-                                bahasa.setTarget("INDONESIA");
+                                bahasa.setTarget("Indonesia");
                             }
 
                         }
@@ -342,18 +388,20 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
     }
     private void populateSpinner2Model(){
+        istilah = new ArrayList<>();
+
         for(int i = 0; i < listBahasa.size(); i++){
             istilah.add(listBahasa.get(i).getTarget());
 //            urls.add(listURL.get(i).getUrl());
         }
+
         adapter3 = new ArrayAdapter<>(this, R.layout.spinner_item, istilah);
         s2.setAdapter(adapter3);
         s2.setOnItemSelectedListener(this);
         defspinner = "KBBI";
-        if(defspinner != null){
-            int spinnerPosition = adapter3.getPosition(defspinner);
-            s2.setSelection(spinnerPosition);
-        }
+        int spinnerPosition = adapter3.getPosition(defspinner);
+        s2.setSelection(spinnerPosition);
+
     }
 
 }

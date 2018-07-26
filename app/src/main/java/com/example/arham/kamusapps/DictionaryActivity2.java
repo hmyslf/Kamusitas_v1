@@ -1,17 +1,15 @@
 package com.example.arham.kamusapps;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
-public class DictionaryActivity extends AppCompatActivity {
+public class DictionaryActivity2 extends AppCompatActivity {
+    TextView word, wordMeaning, kamustxt;
 
-    TextView word, wordMeaning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +28,11 @@ public class DictionaryActivity extends AppCompatActivity {
 
 
 
-        String words = bundle.getString("word");
-        String definition = bundle.getString("def");
+        String words = bundle.getString("word2");
+        String definition = bundle.getString("def2");
 
         word = findViewById(R.id.word);
         wordMeaning = findViewById(R.id.dictionary);
-
         word.setText(words);
         wordMeaning.setText(definition);
 
