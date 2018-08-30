@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.arham.kamusapps">
+    package="com.kamusitas.psi.kamusapps">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -12,17 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/SplashScreen"
-            android:screenOrientation="portrait">
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".KamusActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait"/>
         <activity android:name=".DictionaryActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
