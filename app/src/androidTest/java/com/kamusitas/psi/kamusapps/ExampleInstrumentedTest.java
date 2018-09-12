@@ -1,4 +1,4 @@
-package com.example.arham.kamusapps;
+package com.kamusitas.psi.kamusapps;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

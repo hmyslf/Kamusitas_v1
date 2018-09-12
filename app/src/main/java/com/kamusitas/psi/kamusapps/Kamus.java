@@ -1,8 +1,8 @@
-package com.example.arham.kamusapps;
+package com.kamusitas.psi.kamusapps;
 
 public class Kamus {
-
-    private String word, definition;
+    private String word;
+    private String definition;
     private int id;
 
     public Kamus(String word){

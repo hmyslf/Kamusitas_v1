@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,6 +19,7 @@
         >
 
         <ImageView
+            android:contentDescription="@string/app_name"
             android:id="@+id/appslogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,57 +38,75 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
-
-        <TextView
-            android:id="@+id/choosetxt"
+        <Button
+            android:id="@+id/btnistilah"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="150dp"
-            android:layout_marginStart="150dp"
-            android:layout_marginTop="10dp"
-            android:text="Pilih Kamus   :   "
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="36dp"
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
+            android:layout_marginLeft="36dp"
+            android:text="@string/kamus_istilah"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:background="@drawable/selection_border"/>
+
+        <Button
+            android:id="@+id/btn_bhs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="36dp"
+            android:layout_marginRight="36dp"
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
+            android:textStyle="bold"
+            android:text="@string/kamus_bahasa"
+            android:textColor="@color/black"
+            android:background="@drawable/selection_border"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/rl2"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:id="@+id/choosetxt2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="100dp"
+            android:layout_marginLeft="100dp"
+            android:text="@string/pilih_bahasa"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <Spinner
-            android:id="@+id/spinner1"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/choosetxt"
-            android:layout_gravity="center_horizontal"
-            android:layout_toRightOf="@id/choosetxt"
-            android:background="@drawable/spinner_border" />
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@+id/rl2"
-        android:id="@+id/rl3"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/choosetxt2"
-            android:text="Pilih Bahasa  :   "
-            android:textColor="@color/black"
-            android:layout_marginStart="150dp"
-            android:layout_marginLeft="150dp"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:layout_marginBottom="10dp"/>
-        <Spinner
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
             android:id="@+id/spinner2"
-            android:layout_toRightOf="@id/choosetxt2"
-            android:layout_alignBaseline="@+id/choosetxt2"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/spinner_border"/>
+            android:layout_toEndOf="@+id/choosetxt2"
+            android:layout_toRightOf="@+id/choosetxt2"
+            android:background="@drawable/spinner_border" />
     </RelativeLayout>
 
     <Button
@@ -98,9 +116,11 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="80dp"
+        android:layout_below="@+id/rl3"
         android:background="@drawable/button_border"
-        android:text="Select" />
+        android:text="@string/select" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -114,6 +134,7 @@
         >
 
         <ImageView
+            android:contentDescription="@string/copyright"
             android:id="@+id/copyright"
             android:layout_width="120dp"
             android:layout_height="22.25dp"

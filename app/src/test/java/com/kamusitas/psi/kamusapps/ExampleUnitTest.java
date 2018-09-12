@@ -1,4 +1,4 @@
-package com.example.arham.kamusapps;
+package com.kamusitas.psi.kamusapps;
 
 import org.junit.Test;
 

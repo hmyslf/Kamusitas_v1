@@ -1,10 +1,17 @@
 <resources>
     <string name="app_name">Kamusitas</string>
     <string name="title_activity_kamus">Kamusitas</string>
-    <string name="definition">Translation  :</string>
+    <string name="definition">Arti  :</string>
     <string-array name="pilihKamus">
         <item>Kamus Istilah</item>
         <item>Kamus Bahasa</item>
     </string-array>
-    <string name="copyright">Powered By  :\u0020</string>
+    <string name="tagline">Kamus Segala Bahasa</string>
+    <string name="copyright">Powered By</string>
+    <string name="kamus_istilah">Kamus Istilah</string>
+    <string name="kamus_bahasa">Kamus Bahasa</string>
+    <string name="pilih_bahasa">Pilih Bahasa:\t</string>
+    <string name="pilih_kamus">Pilih Kamus \t:\t</string>
+    <string name="select">Pilih</string>
+    <string name="asalkata">Asal Kata\t:\t</string>
 </resources>

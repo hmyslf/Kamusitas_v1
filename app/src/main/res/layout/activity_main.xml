@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:layout_weight="1"
+    android:background="@color/white"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
     <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->
@@ -17,40 +17,64 @@
     <!--android:orientation="vertical"-->
     <!--&gt;-->
     <RelativeLayout
+        android:id="@+id/relay1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/darkblue"
-        android:id="@+id/relay1"
-        >
+        android:layout_alignParentTop="true"
+        android:background="@color/darkblue">
 
         <ImageView
             android:id="@+id/appslogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:contentDescription="@string/app_name"
+            android:padding="8dp"
+            android:src="@drawable/logo_kamusitas" />
+
+        <TextView
+            android:id="@+id/appsname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/logo_kamusitas"
-            android:padding="26dp"/>
+            android:text="@string/tagline"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/appsname"
+            android:layout_centerHorizontal="true"
+            android:text="@string/app_name"
+            android:textStyle="bold|italic" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/relay2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="194dp">
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/relay1"
+        android:layout_marginTop="10dp">
 
         <Button
             android:id="@+id/btnistilah"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="36dp"
             android:layout_marginLeft="36dp"
-            android:text="Kamus Istilah" />
+            android:layout_marginStart="36dp"
+            android:background="@drawable/selection_border"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="@string/kamus_istilah"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
 
         <Button
             android:id="@+id/btn_bhs"
@@ -61,8 +85,70 @@
             android:layout_alignParentTop="true"
             android:layout_marginEnd="36dp"
             android:layout_marginRight="36dp"
-            android:text="Kamus Bahasa" />
+            android:background="@drawable/selection_border"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="@string/kamus_bahasa"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
     </RelativeLayout>
+
+    <SearchView
+        android:id="@+id/sv1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/choosetxt2"
+        android:layout_marginTop="20dp"
+        android:imeOptions="actionSearch"
+        android:icon="@drawable/ic_search_icon_main"
+        android:iconifiedByDefault="false"
+        android:paddingBottom="@dimen/activity_horizontal_margin"
+        android:queryHint="Masukkan Kata"
+        android:searchIcon="@drawable/ic_search_icon_main"
+        />
+    <TextView
+        android:id="@+id/kamustxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sv1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:visibility="gone"/>
+
+    <ListView
+        android:id="@+id/listview1"
+        android:layout_width="wrap_content"
+        android:layout_height="110dp"
+        android:layout_alignLeft="@+id/sv1"
+        android:layout_alignStart="@+id/sv1"
+        android:layout_below="@+id/kamustxt"
+        android:layout_marginTop="10dp"
+        />
+    <TextView
+        android:id="@+id/kamustxt2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/listview1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:visibility="gone"/>
+
+    <ListView
+        android:id="@+id/listView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/sv1"
+        android:layout_alignStart="@+id/sv1"
+        android:layout_below="@+id/kamustxt2"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
+        />
 
     <!--<TextView-->
     <!--android:id="@+id/choosetxt"-->
@@ -92,49 +178,42 @@
         android:id="@+id/choosetxt2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/spinner2"
-        android:layout_alignLeft="@+id/spinner2"
-        android:layout_marginTop="292dp"
-        android:text="Pilih Bahasa   :"
+        android:layout_below="@+id/relay2"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/pilih_bahasa"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold" />
-    <Spinner
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner2"
-        android:layout_centerInParent="true"
-        android:layout_below="@+id/choosetxt2"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/spinner_border"
-        android:popupBackground="@color/white"/>
 
-    <Button
-        android:id="@+id/btn1"
+    <Spinner
+        android:id="@+id/spinner2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="211dp"
-        android:layout_below="@+id/spinner2"
-        android:background="@drawable/button_border"
-        android:text="Select" />
+        android:layout_alignBaseline="@+id/choosetxt2"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@id/choosetxt2"
+        android:layout_toRightOf="@id/choosetxt2"
+        android:background="@drawable/spinner_border"
+        android:popupBackground="@color/white" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="horizontal"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@color/darkblue"
         android:gravity="center_horizontal"
-        android:background="@color/darkblue">
+        android:orientation="horizontal">
         <ImageView
-            android:layout_width="120dp"
-            android:layout_height="23dp"
             android:id="@+id/copyright"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/copyright_image"
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="24dp"/>
+            android:contentDescription="@string/copyright"/>
         <!--android:text="@string/copyright"-->
         <!--android:textSize="15sp"-->
         <!--android:textColor="@color/black"-->

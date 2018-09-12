@@ -2,63 +2,70 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
 
     <TextView
+        android:id="@+id/word"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/word"
-        android:text="@string/app_name"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:text="@string/asalkata"
         android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginLeft="20dp"/>
+        android:textStyle="bold"/>
     <View
+        android:id="@+id/seperator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:id="@+id/seperator"
         android:layout_below="@+id/word"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:background="#000000" />
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/definition"
         android:id="@+id/define"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:layout_marginLeft="20dp"
-        android:layout_below="@+id/seperator"/>
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:layout_below="@+id/seperator"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:text="@string/definition"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+    <TextView
         android:id="@+id/dictionary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/define"
         android:layout_marginLeft="20dp"
-        android:layout_alignParentLeft="true"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:textSize="15sp"
-        android:layout_alignParentStart="true"/>
-
+        android:lineSpacingMultiplier="1.5"
+        android:text="New Text"
+        android:textSize="15sp"/>
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="horizontal"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@color/darkblue"
         android:gravity="center_horizontal"
-        android:background="@color/darkblue">
+        android:orientation="horizontal">
         <ImageView
-            android:layout_width="120dp"
-            android:layout_height="23dp"
             android:id="@+id/copyright"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/copyright_image"
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="24dp"/>
+            android:contentDescription="@string/copyright"/>
         <!--android:text="@string/copyright"-->
         <!--android:textSize="15sp"-->
         <!--android:textColor="@color/black"-->
