@@ -1,6 +1,7 @@
 package com.kamusitas.psi.kamusapps;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -24,7 +25,6 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import org.apache.http.NameValuePair;
@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     TextView kmstxt, kmstxt2;
     EditText et;
     SearchView sv1;
+    public static Context context;
     ArrayAdapter<String> adapt2, adapt48;
     ArrayList<String> istilah, lables;
     private Spinner s2;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     private String url_getbahasa = "https://api.prime-strategy.co.id/kamusitas/v1/kamus";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //set splash screen time
         setTheme(R.style.SplashScreen);
         try {
             Thread.sleep(2000);
@@ -63,12 +65,13 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             e.printStackTrace();
         }
         super.onCreate(savedInstanceState);
+        MainActivity.context = getApplicationContext();
         setContentView(R.layout.activity_main);
+        // Layout initiation
         s2 = findViewById(R.id.spinner2);
         sv1 = findViewById(R.id.sv1);
-        sv1.clearFocus();
         listview48 = findViewById(R.id.listview1);
-
+        sv1.clearFocus();
         listview2 = findViewById(R.id.listView2);
         int searchedit = sv1.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
         et = findViewById(searchedit);
@@ -88,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         btnistilah.setTypeface(custom_font, Typeface.BOLD);
         btnbahasa.setTypeface(custom_font, Typeface.BOLD);
         pdialog = new ProgressDialog(this);
+        // Set onclick to footer logo
         copyright.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                 startActivity(intent2);
             }
         });
-
+        //initiate and set onclick header logo
         appslogo = findViewById(R.id.appslogo);
         appslogo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,12 +114,12 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                 startActivity(mainsite);
             }
         });
-
+        // initiate arraylist for spinner
         lables = new ArrayList<>();
-
         listAdaptMain = new ArrayList<>();
         listAdapter2 = new ArrayList<>();
         listBahasa = new ArrayList<>();
+        //change button color with onclick
         final Drawable roundDrawable = getResources().getDrawable(R.drawable.selection_border);
         roundDrawable.setColorFilter(getResources().getColor(R.color.darkblue), PorterDuff.Mode.SRC_ATOP);
         final Drawable roundDrawable2 = getResources().getDrawable(R.drawable.selection_border);
@@ -126,8 +130,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         btnbahasa.setTextColor(getResources().getColor(R.color.white));
         divider = btnbahasa.getText().toString();
 
-
-         listBahasa.clear();
+        // clear spinner items and populate spinner items
+        listBahasa.clear();
         new GetBahasaFromServer().execute();
 
         btnistilah.setOnClickListener(new View.OnClickListener() {
@@ -159,15 +163,12 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             }
         });
 
-
-
-
-
         sv1.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 listAdaptMain.clear();
                 listAdapter2.clear();
+                sv1.clearFocus();
                 if (bahasatgt.equals("Adsense") || bahasatgt.equals("Komputer")
                         || bahasatgt.equals("KBBI")|| bahasatgt.equals("Akuntansi")
                         || bahasatgt.equals("Bahasa-gaul-singkatan-inggris")
@@ -201,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
             @Override
             public boolean onQueryTextChange(String s) {
+
                 return false;
             }
         });
@@ -234,7 +236,6 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             txt_kamus2 = bahasatgt + "-" + bahasa;
             kmstxt.setText(txt_kamus);
             kmstxt2.setText(txt_kamus2);
-            Toast.makeText(this, bahasa, Toast.LENGTH_LONG).show();
             if(bhs.equals("kbbi")){
                 titlebhs = bhs.toUpperCase();
             } else {
@@ -381,8 +382,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         @Override
         protected void onPreExecute(){
             super.onPreExecute();
-//            pdialog.setMessage("Loading Data...");
-//            pdialog.show();
+            pdialog.setMessage("Loading Data...");
+            pdialog.show();
         }
 
         @Override
@@ -467,6 +468,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         @Override
         protected void onPreExecute(){
             super.onPreExecute();
+            pdialog.setMessage("Loading Data...");
+            pdialog.show();
         }
 
         @Override
@@ -533,7 +536,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
         protected void onPostExecute(Void result){
             super.onPostExecute(result);
-//                pDiaLog.dismiss();
+          if(pdialog.isShowing()){
+                pdialog.dismiss();
+            }
             populateListView();
         }
 

@@ -19,6 +19,7 @@ import org.apache.http.params.HttpParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -30,10 +31,23 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManagerFactory;
 
 public class Handler {
     static InputStream is = null;
@@ -51,26 +65,22 @@ public class Handler {
     public String makeServiceCall(String url, int method, List<NameValuePair> params){
         try {
 
-            SchemeRegistry schemeRegistry = new SchemeRegistry();
-            schemeRegistry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
-            HttpParams params2 = new BasicHttpParams();
-            SingleClientConnManager mgr = new SingleClientConnManager(params2, schemeRegistry);
-            DefaultHttpClient httpClient = new DefaultHttpClient(mgr, params2);
-            HttpEntity httpEntity = null;
-            HttpResponse httpResponse = null;
-
+            URL myURL = new URL(url);
+            HttpsURLConnection conn = (HttpsURLConnection) myURL.openConnection();
             if(method == POST){
-                HttpPost httpPost = new HttpPost(url);
-                if(params != null){
-                    httpPost.setEntity(new UrlEncodedFormEntity(params));
-                }
-                httpResponse = httpClient.execute(httpPost);
-            } else if (method == GET) {
-                HttpGet httpGet = new HttpGet(url);
-                httpResponse = httpClient.execute(httpGet);
+                conn.setRequestMethod("POST");
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+                OutputStream wr = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(wr, "UTF-8"));
+                writer.write(getQuery(params));
+                writer.flush();
+                writer.close();
+                wr.close();
+            } else if (method == GET){
+                conn.setRequestMethod("GET");
             }
-            httpEntity = httpResponse.getEntity();
-            is = httpEntity.getContent();
+            is = conn.getInputStream();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (ClientProtocolException e){
@@ -92,74 +102,24 @@ public class Handler {
         }
         return response;
     }
-    public String requestData(String url, int method) {
-        return this.requestData(url, null);
-    }
-    public String requestData(String url, String params) {
-        try {
-            URL reqUrl = new URL(url);
 
-            HttpsURLConnection conn = (HttpsURLConnection) reqUrl.openConnection();
-            conn.setReadTimeout(15000 /* miliseconds */);
-            conn.setConnectTimeout(15000 /* miliseconds */);
-            conn.setRequestMethod("POST");
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
-
-            OutputStream os = conn.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-
-            writer.write(params);
-            writer.flush();
-            writer.close();
-            os.close();
-
-            conn.getResponseCode();
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-                StringBuilder sb = new StringBuilder("");
-                String line = null;
-                while((line = in.readLine()) != null) {
-                    sb.append(line + "\n");
-                }
-                in.close();
-                response = sb.toString();
-                conn.disconnect();
-
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-            return response;
-    }
-
-    public String getPostDataString(JSONObject params) throws Exception {
-
+    private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException
+    {
         StringBuilder result = new StringBuilder();
         boolean first = true;
 
-        Iterator<String> itr = params.keys();
-
-        while(itr.hasNext()){
-
-            String key= itr.next();
-            Object value = params.get(key);
-
+        for (NameValuePair pair : params)
+        {
             if (first)
                 first = false;
             else
                 result.append("&");
 
-            result.append(URLEncoder.encode(key, "UTF-8"));
+            result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
             result.append("=");
-            result.append(URLEncoder.encode(value.toString(), "UTF-8"));
-
+            result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
         }
+
         return result.toString();
     }
 
